@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Printing Technologies</title>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f10;
+  color: #f0f0f0;
+  margin: 0;
+}
+header {
+  background: linear-gradient(90deg, #0072ff, #00c6ff);
+  text-align: center;
+  padding: 1.5em;
+}
+nav {
+  background: #101820;
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  padding: 1em;
+}
+nav a, nav button {
+  color: #00c6ff;
+  text-decoration: none;
+  font-weight: 600;
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:1em;
+}
+nav button:hover, nav a:hover {
+  text-decoration: underline;
+}
+section { padding: 3em 10%; }
+h2 {
+  color: #00c6ff;
+  border-bottom: 2px solid #00c6ff;
+  display: inline-block;
+  margin-bottom: 1em;
+}
+.produse {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2em;
+}
+.produs {
+  background: #181818;
+  padding: 1.5em;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+.produs img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1em;
+}
+button.add {
+  background: #00c6ff;
+  border: none;
+  padding: 0.6em 1.2em;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button.add:hover {
+  background: #0072ff;
+}
+#cos {
+  background: #181818;
+  padding: 1.5em;
+  border-radius: 10px;
+  margin-top: 2em;
+}
+footer {
+  background: #101820;
+  text-align: center;
+  padding: 1.5em;
+  color: #aaa;
+}
+
+/* Stil fereastra Owner */
+#loginOwner {
+  display:none;
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  flex-direction:column;
+  color:white;
+}
+#loginOwner input {
+  padding:0.5em;
+  margin:0.5em;
+  font-size:1em;
+  border-radius:5px;
+  border:none;
+}
+#loginOwner button {
+  background:#00c6ff;
+  color:white;
+  padding:0.5em 1em;
+  border-radius:5px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+#loginOwner button:hover {
+  background:#0072ff;
+}
+
+/* Panou Owner după login */
+#ownerPanel {
+  display:none;
+  background: #181818;
+  padding: 1em;
+  border-radius: 10px;
+  margin: 2em 10%;
+}
+#ownerPanel input {
+  margin: 0.3em;
+  padding:0.5em;
+  border-radius:5px;
+  border:none;
+}
+#ownerPanel button {
+  margin: 0.3em;
+  padding:0.5em 1em;
+  border-radius:5px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  background:#00c6ff;
+  color:white;
+}
+#ownerPanel button:hover {
+  background:#0072ff;
+}
+.owner-prod-list div {
+  margin:0.5em 0;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>3D Printing Technologies</h1>
+  <p>Inovație, precizie și performanță în printarea 3D</p>
+</header>
+
+<nav>
+  <a href="#produse">Produse</a>
+  <a href="#cos">Coș</a>
+  <a href="#contact">Contact</a>
+  <button onclick="deschideLoginOwner()">Owner</button>
+</nav>
+
+<section id="produse">
+  <h2>Produsele noastre</h2>
+  <div class="produse" id="lista-produse">
+    <!-- Produsele sunt definite aici -->
+  </div>
+</section>
+
+<section id="cos">
+  <h2>Coș de cumpărături</h2>
+  <div id="lista-cos"></div>
+  <p><strong>Total:</strong> <span id="total">0</span> RON</p>
+  <button id="trimite-comanda">Trimite comanda prin WhatsApp</button>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>📞 Telefon: <strong>0770 415 834</strong></p>
+  <p>📧 Email: <a href="mailto:contact@3dprintingtechnologies.ro" style="color:#00c6ff;">contact@3dprintingtechnologies.ro</a></p>
+</section>
+
+<!-- Fereastra Owner Login -->
+<div id="loginOwner">
+  <h2>Owner Login</h2>
+  <input type="password" id="parolaOwner" placeholder="Introdu parola">
+  <button onclick="verificaParola()">Autentifică-te</button>
+  <p id="eroareParola" style="color:red; margin-top:0.5em;"></p>
+</div>
+
+<!-- Panou Owner după login -->
+<div id="ownerPanel">
+  <h2>Panou Owner</h2>
+  <div>
+    <input type="text" id="prodNume" placeholder="Nume produs">
+    <input type="number" id="prodPret" placeholder="Preț RON">
+    <input type="text" id="prodImg" placeholder="URL imagine">
+    <button onclick="adaugaProdus()">Adaugă produs</button>
+  </div>
+  <h3>Produse existente:</h3>
+  <div class="owner-prod-list" id="ownerProdList"></div>
+</div>
+
+<footer>
+  &copy; 2025 3D Printing Technologies. Toate drepturile rezervate.
+</footer>
+
+<script>
+// --- PRODUSE ---
+let produse = [
+  {id: 1, nume: "Model mecanic 3D", pret: 150, img: "https://via.placeholder.com/300x200?text=Model+Mecanic+3D"},
+  {id: 2, nume: "Carcasă personalizată", pret: 90, img: "https://via.placeholder.com/300x200?text=Carcasa+personalizata"},
+  {id: 3, nume: "Figurină unică", pret: 120, img: "https://via.placeholder.com/300x200?text=Figurina+3D"},
+  {id: 4, nume: "Piesă industrială", pret: 200, img: "https://via.placeholder.com/300x200?text=Piesa+Industriala"}
+];
+
+// --- AFIȘARE PRODUSE ---
+const listaProduse = document.getElementById("lista-produse");
+function afiseazaProduse() {
+  listaProduse.innerHTML = "";
+  produse.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "produs";
+    div.innerHTML = `
+      <img src="${p.img}" alt="${p.nume}">
+      <h3>${p.nume}</h3>
+      <p><strong>${p.pret} RON</strong></p>
+      <button class="add" onclick="adaugaInCos(${p.id})">Adaugă în coș</button>
+    `;
+    listaProduse.appendChild(div);
+  });
+}
+afiseazaProduse();
+
+// --- COȘ ---
+let cos = [];
+function adaugaInCos(id) {
+  const produs = produse.find(p => p.id === id);
+  cos.push(produs);
+  actualizeazaCos();
+}
+function actualizeazaCos() {
+  const listaCos = document.getElementById("lista-cos");
+  listaCos.innerHTML = "";
+  let total = 0;
+  cos.forEach((p, i) => {
+    total += p.pret;
+    const item = document.createElement("div");
+    item.innerHTML = `${p.nume} - ${p.pret} RON <button onclick="sterge(${i})">❌</button>`;
+    listaCos.appendChild(item);
+  });
+  document.getElementById("total").textContent = total;
+}
+function sterge(index) {
+  cos.splice(index, 1);
+  actualizeazaCos();
+}
+document.getElementById("trimite-comanda").addEventListener("click", () => {
+  if(cos.length === 0) { alert("Coșul este gol!"); return; }
+  const produseText = cos.map(p => `${p.nume} (${p.pret} RON)`).join(", ");
+  const total = cos.reduce((t,p) => t+p.pret,0);
+  const mesaj = `Salut! Aș dori să comand: ${produseText}. Total: ${total} RON.`;
+  const url = `https://wa.me/40770415834?text=${encodeURIComponent(mesaj)}`;
+  window.open(url,"_blank");
+});
+
+// --- OWNER LOGIN ---
+function deschideLoginOwner() {
+  document.getElementById("loginOwner").style.display = "flex";
+}
+function verificaParola() {
+  const parola = document.getElementById("parolaOwner").value;
+  if(parola === "3599") {
+    document.getElementById("loginOwner").style.display = "none";
+    document.getElementById("ownerPanel").style.display = "block";
+    afiseazaOwnerProduse();
+  } else {
+    document.getElementById("eroareParola").textContent = "Parolă greșită!";
+  }
+}
+
+// --- PANOU OWNER ---
+function afiseazaOwnerProduse() {
+  const ownerList = document.getElementById("ownerProdList");
+  ownerList.innerHTML = "";
+  produse.forEach((p,i) => {
+    const div = document.createElement("div");
+    div.innerHTML = `${p.nume} - ${p.pret} RON <button onclick="stergeProdus(${i})">❌</button>`;
+    ownerList.appendChild(div);
+  });
+}
+function adaugaProdus() {
+  const nume = document.getElementById("prodNume").value;
+  const pret = parseFloat(document.getElementById("prodPret").value);
+  const img = document.getElementById("prodImg").value;
+  if(!nume || isNaN(pret) || !img) { alert("Completează toate câmpurile!"); return; }
+  const id = produse.length ? produse[produse.length-1].id +1 : 1;
+  produse.push({id,nume,pret,img});
+  afiseazaProduse();
+  afiseazaOwnerProduse();
+  document.getElementById("prodNume").value="";
+  document.getElementById("prodPret").value="";
+  document.getElementById("prodImg").value="";
+}
+function stergeProdus(index) {
+  produse.splice(index,1);
+  afiseazaProduse();
+  afiseazaOwnerProduse();
+}
+</script>
+
+</body>
+</html>
